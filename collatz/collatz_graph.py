@@ -16,16 +16,6 @@ def time_it(func):
 		return result
 	return wrapper		
 
-#Write a Python program to check if a given positive integer is a power of another integer. 
-def power_of_two(num, base):
-	ret_val = False
-	num = int(num)
-	base = int(base)
-	if num > 0:
-		if math.log(num,base).is_integer():
-			ret_val = True
-	return ret_val
-
 def collatz(num):
 	global collatz_history
 	num = int(num)
