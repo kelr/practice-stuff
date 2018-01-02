@@ -21,21 +21,17 @@ class ABBADiv1:
 		return "Possible" if self._check_and_insert(self.root) else "Impossible"
 
 	def _check_and_insert(self, node):
-		#print(node.data)
-
 		# If we reached the terminating length, see if the strings are equal
 		if len(node.data) == len(self.target):
 			if node.data == self.target:
 				return True
 			else:
-				#print("Terminating Deleted " + node.data)
 				del node
 				return False
 		
 		# If our current string can't be found in the target or the reverse target
 		# Back up and try a different combination
 		if node.data not in self.target and node.data not in self.target_reverse:
-			#print("Deviation Deleted " + node.data)
 			del node
 			return False
 
