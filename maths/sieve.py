@@ -1,7 +1,5 @@
 import sys
-from time_it import time_it
 
-@time_it
 def sieve(n):
 	"""
 	Some kinda slow implementation for the Sieve of Eratosthenes.
@@ -19,7 +17,7 @@ def sieve(n):
 			prime_list.append(curr)
 			# Mark all multiples of the current integer, because they aren't prime.
 			# We start marking from curr^2 as all smaller multiples of curr will have already been marked
-			for marked in range(curr*curr, n+1, curr):
+			for marked in range(curr**2, n+1, curr):
 				marked_list.append(marked)
 	return prime_list
 

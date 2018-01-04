@@ -4,10 +4,13 @@ class Substitute:
 	def getValue(self, key, code):
 		result = ""
 		critical = ""
+		# Fancy python listcomp for finding the intersection of key and code
 		critical = critical.join(i for i in code if i in code and i in key)
+
 		for char in critical:
 			if char in key:
 				index = str(key.index(char) + 1)
+				# Arrays start at 0, but apparently they want it to start at 1 and go to 10
 				if index == "10":
 					index = "0"
 				result += index
