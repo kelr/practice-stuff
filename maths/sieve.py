@@ -10,15 +10,19 @@ def sieve(n):
 	# Use a dict for the marked list for better searching
 	marked = dict()
 	prime_list = list()
-	# Test all positive integers sans 1 within the given range
-	for curr in range(2, n+1):
+
+	# 2 is still the loneliest prime
+	prime_list.append(2)
+	
+	# Test all positive non even integers within the given range
+	for curr in range(3, n, 2):
 		# If the current integer being tested wasn't marked by the sieve,
 		# It must be prime, then mark all multiples of the current integer
-		if curr not in marked.keys():
+		if curr not in marked:
 			prime_list.append(curr)
 			# Mark all multiples of the current integer, because they aren't prime.
 			# We start marking from curr^2 as all smaller multiples of curr will have already been marked
-			for m in range(curr**2, n+1, curr):
+			for m in range(curr*curr, n+1, curr):
 				marked[m] = False
 	return prime_list
 
