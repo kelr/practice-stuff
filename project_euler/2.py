@@ -13,11 +13,11 @@ sys.path.append("..")
 from maths import fib
 
 def fib_even_sum():
-	curr_sum = 0
-	fib_list = fib.fib(4000000)
-	for n in fib_list:
-		if n % 2 == 0:
-			curr_sum += n
-	return curr_sum
+    curr_sum = 0
+    fib_list = fib.fib(4000000)
+    for n in fib_list:
+        if n % 2 == 0:
+            curr_sum += n
+    return curr_sum
 
 print(fib_even_sum())
