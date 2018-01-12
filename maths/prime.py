@@ -65,9 +65,9 @@ def is_prime(n):
     if n < 2:
         raise ValueError
     # We only need to check divisibility for up to floor(n <= sqrt(n))
-    # Added a +1 to deal with small values of n
+    # Added a +1 to deal with small values of n. I'm aware that it can just be a ceiling call.
     n_max = int(n**(0.5)) + 1
-
+    
     # 2 is the loneliest prime
     if n == 2:
         return True
