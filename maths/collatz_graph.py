@@ -2,7 +2,7 @@ import sys
 import math
 import time
 import matplotlib.pyplot as plot
-from time_it import time_it
+#from time_it import time_it
 
 collatz_history = dict()
     
@@ -37,8 +37,7 @@ def collatz(num):
         print("Need to be positive int")
     return count
 
-@time_it
-def main(max):
+def max_collatz(max):
     """
     The entry point for this script
     """
@@ -66,4 +65,4 @@ def main(max):
     print("Max iters: " + str(curr_max) + " at num: " + str(num_result) + " for range 1 to " + str(max))
 
 if __name__ == "__main__":
-     main(sys.argv[1])
+     max_collatz(sys.argv[1])
