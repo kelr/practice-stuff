@@ -4,10 +4,12 @@ Starting in the top left corner of a 2×2 grid, and only being able to move to t
 
 How many such routes are there through a 20×20 grid?
 """
-from math import factorial
+import sys
+sys.path.append("..")
+from maths.factorial import factorial
 
 def num_of_routes(grid_size):
     # Possible permuations / permutations of right / permutations of down
-    return (factorial(grid_size*2) / factorial(grid_size) / factorial(grid_size))
+    return int((factorial(grid_size*2) / factorial(grid_size) / factorial(grid_size)))
 
 print(num_of_routes(20))
