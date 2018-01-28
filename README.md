@@ -3,7 +3,7 @@
 #### Things here were for practice, I take no responsibility if the code blows up
 
 ##### maths
-Various code for some subpar algorithms to compute prime numbers, Mersenne Primes, Collatz iterations, etc.
+Various code for some subpar algorithms to compute prime numbers, Mersenne Primes, Collatz iterations, etc. Many of these functions may be used in project euler problems.
 
 ##### project_euler
 Project Euler Practice problems. The problems themselves are owned by Project Euler. Visit projecteuler.net for a list of all problems.
