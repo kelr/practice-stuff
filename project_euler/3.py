@@ -8,23 +8,26 @@ What is the largest prime factor of the number 600851475143 ?
 import sys
 sys.path.append("..")
 from maths.prime import sieve, is_prime
+from maths.helperfuncs import ceiling
 
-def prime_factorization(num):
-    if is_prime(num):
-        return num
-    saved_num = num
+def prime_factorization(input_num):
+    if is_prime(input_num):
+        return input_num
+    saved_num = input_num
     factor_list = list()
-    max_sieve = int(num**(0.5))
+    max_sieve = ceiling(input_num**(0.5))
 
     print("Sieving for all primes from 2 to", str(max_sieve), "be patient, it might take a while for large numbers.")
     test_primes = sieve(max_sieve)
-    while not is_prime(num):
+    while not is_prime(input_num):
         for n in test_primes:
-            if num % n == 0:
-                num = num // n
+            if input_num % n == 0:
+                input_num = input_num // n
                 factor_list.append(n)
                 break
-    factor_list.append(num)
+        if input_num == 1:
+            break
+    factor_list.append(input_num)
 
     print("Prime factorization of", saved_num, ":", str(factor_list))
     largest = 0

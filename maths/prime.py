@@ -1,4 +1,5 @@
 from . import time_it
+from .helperfuncs import ceiling
 
 def sieve(n):
     """
@@ -62,11 +63,13 @@ def mersenne(prime_max):
     return mersennes
 
 def is_prime(n):
+    # 1 is not prime, by the way
     if n < 2:
-        raise ValueError
+        return False
+        
     # We only need to check divisibility for up to floor(n <= sqrt(n))
-    # Added a +1 to deal with small values of n. I'm aware that it can just be a ceiling call.
-    n_max = int(n**(0.5)) + 1
+    # Added a +1 to deal with small values of n. I'm aware that I can just use ceiling.
+    n_max = ceiling(n**(0.5))
     
     # 2 is the loneliest prime
     if n == 2:
@@ -76,11 +79,13 @@ def is_prime(n):
     if n % 2 == 0:
         return False
 
-    # Iterate over odd test values as 2 is the only even prime
-    for test in range(3, n_max, 2):
-        if n % test == 0:
-            return False
-    return True
+    test = 3
+    # Iterate over odd test values as 2 is the only even prime. Terminates early if a divisor is found
+    while n % test != 0 and test < n_max:
+        test += 2
+
+    # This will return true if we've iterated through everything from 3 to sqrt(n)+1, meaning prime
+    return test > n_max
 
 def generate_prime():
     yield 2
