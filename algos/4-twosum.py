@@ -41,4 +41,14 @@ class Solution:
                 comp_map[compliment] = i
         return []
 
+    # O(N^2) time, O(1) space
+    def two_sum_brute_force(self, nums, target):
+        for i, elem1 in enumerate(nums):
+            for j, elem2 in enumerate(nums):
+                if elem1 + elem2 == target:
+                    return [i, j]
+        return []
+
+
 assert Solution().two_sum([2,7,11,15], 9) == [0, 1]
+assert Solution().two_sum_brute_force([2,7,11,15], 9) == [0, 1]
