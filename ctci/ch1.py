@@ -1,3 +1,10 @@
+# Array strats
+# Sorting
+# Auxillary array/map, only when O(1) is not neccesary
+# Runner pointers
+# Binary search if looking for something or O(lgN) time is needed
+
+
 # 1.1
 # O(N) time, N is chars in string, single pass
 # O(N) space, 1 entry in map per character if all are unique
