@@ -81,3 +81,159 @@ assert isPermutation("abcdefghijklmnopqrstuvwxyz", "nopqrstuvwxyzabcdefghijklm")
 assert not isPermutation("abcdefghijklmnopqrstuv1xyz", "nopqrstuvwxyzabcdefghijklm")
 
 # Need to know if case sensitive, and white space. Can just use an array mapping like 1.1 but you need to know the character set.
+
+
+###########
+# 1.3
+
+# Two refs to the ending index in the string. Move front until its no longer whitespace. 
+# Then copy the character at front to end. If front finds a space now, add %20 at end.
+# O(N) since front traverses the array in one pass. 
+# O(1) space, replacement is done inplace.
+def urlify(s, trueLen: int) -> str:
+    front = len(s) - 1
+    end = len(s) - 1
+
+    while s[front] == " ":
+        front -= 1
+
+    while front >= 0:
+        if s[front] == " ":
+            s[end] = "0"
+            s[end - 1] = "2"
+            s[end - 2] = "%"
+            end -= 3
+        else:
+            s[end] = s[front]
+            end -= 1
+        front -= 1
+
+
+instr = list("Mr John Smith    ")
+urlify(instr, 13)
+assert(instr == list("Mr%20John%20Smith"))
+
+
+#######
+# 1.4
+
+# Get the frequency count of all chars in s, then check that there is at most 1 odd frequency count
+# Since a palindrome can have 1 odd character count max, it goes in the middle.
+# O(N) time since a pass to build the freq table and one pass through the freq table. Freq table has at most N entries.
+# O(N) space as there is at most N entires in the freq table (all even counts)
+# Can use a bit vector instead to map the 26 characters to bits. 
+def isPalindromePermutation(s: str) -> bool:
+    return checkAtMostOneOdd(buildFreqTable(s))
+
+def buildFreqTable(s: str) -> dict:
+    if not s:
+        return {}
+    freqTable = {}
+    for char in s:
+        if char not in freqTable:
+            freqTable[char] = 1
+        else:
+            freqTable[char] += 1
+    return freqTable
+
+def checkAtMostOneOdd(freqTable: dict) -> bool:
+    if not freqTable:
+        return True
+    one_odd = False
+    for char in freqTable:
+        if freqTable[char] % 2 != 0:
+            if not one_odd:
+                one_odd = True
+            else:
+                return False
+    return True
+
+assert isPalindromePermutation("tactcoapapa")
+assert isPalindromePermutation("")
+assert isPalindromePermutation("a")
+assert not isPalindromePermutation("tactcopapa")
+
+
+######
+# 1.5
+
+# If the strings are the same length, iterate through both of them simultaniously and check each character
+# against the other string. False if more than 1 difference exists.
+# If the strings are 1 char apart, build a freq table with the shorter one and have the larger one subtract from it
+# Return false if there are more than one difference.
+# O(N) time as replace will at worst iterate through the length either of the strings. 
+# Insert will iterate through both strings seperately for at most N + N-1 iterations. 
+# O(1) space if the strings are the same length, O(N) if they are one apart since a freq table is made.
+def isOneAway(s1: str, s2: str) -> bool:
+    len_s1 = len(s1)
+    len_s2 = len(s2)
+
+    # If the length difference is beyond one, no way it could be one edit away
+    if abs(len_s1 - len_s2) > 1:
+        return False
+
+    if len_s1 == len_s2:
+        return isOneAwayReplace(s1, s2)
+    elif len_s1 < len_s2:
+        return isOneAwayInsertNoTable(s1, s2)
+    else:
+        return isOneAwayInsertNoTable(s2, s1)
+
+def isOneAwayReplace(s1: str, s2: str) -> bool:
+    foundDiff = False
+    for i in range(0, len(s1)):
+        if s1[i] != s2[i]:
+            if foundDiff:
+                return False
+            foundDiff = True
+    return True
+
+def isOneAwayInsertNoTable(shorter: str, longer: str) -> bool:
+    foundDiff = False
+    idx1 = 0
+    idx2 = 0
+    while (idx1 < len(shorter) and idx2 < len(longer)):
+        if shorter[idx1] != longer[idx2]:
+            if foundDiff:
+                return False
+            foundDiff = True
+        else:
+            idx1 += 1
+        idx2 += 1
+    return True
+
+def isOneAwayInsert(shorter: str, longer: str) -> bool:
+    freqTable = buildFreqTable(shorter)
+    diffs = 0
+    for char in longer:
+        if char in freqTable:
+            freqTable[char] -= 1
+            if freqTable[char] < 0:
+                diffs += 1
+                if diffs > 1:
+                    return False
+        else:
+            diffs += 1
+            if diffs > 1:
+                return False
+    return True
+
+def buildFreqTable(s: str) -> dict:
+    if not s:
+        return {}
+    freqTable = {}
+    for char in s:
+        if char not in freqTable:
+            freqTable[char] = 1
+        else:
+            freqTable[char] += 1
+    return freqTable
+
+assert isOneAway("pale", "ple")
+assert isOneAway("pales", "pale")
+assert isOneAway("pale", "bale")
+assert not isOneAway("pale", "bake")
+assert isOneAway("pale", "pale")
+assert isOneAway("", "")
+assert isOneAway("", "e")
+assert isOneAway("a", "")
