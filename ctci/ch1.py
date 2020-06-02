@@ -237,3 +237,30 @@ assert isOneAway("pale", "pale")
 assert isOneAway("", "")
 assert isOneAway("", "e")
 assert isOneAway("a", "")
+
+########################
+# 1.6
+
+# Check if the current char is the previous char, if not append to the output string.
+# Increment count of the current char each time
+# Return original string if the output is equal or larger.
+# O(N) if string concatentation does not create a new string object each time otherwise O(N + k^2. Single pass to count the chars. Could probably just join on a list.
+# O(N) space as the most the output string can be is 2N.
+def compress(s :str) -> str:
+    if not s:
+        return ""
+    count = 0
+    prev = s[0]
+    out = ""
+    for char in s:
+        if prev != char:
+            out += prev + str(count)
+            count = 0
+            prev = char
+        count += 1
+    out += prev + str(count)
+    print(out)           
+    return s if len(out) >= len(s) else out
+
+assert "a2b1c5a3" == compress("aabcccccaaa")
+assert compress("aaabbdndddskkkklsss") == "a3b2d1n1d3s1k4l1s3"
