@@ -264,3 +264,110 @@ def compress(s :str) -> str:
 
 assert "a2b1c5a3" == compress("aabcccccaaa")
 assert compress("aaabbdndddskkkklsss") == "a3b2d1n1d3s1k4l1s3"
+
+#####################
+# 1.7
+
+# Create a new NxN image and fill it with the rotated positions.
+# O(N^2) due to having to iterate through N^2 values
+# O(N^2) due to creation of a new image
+def rotate(img, N):
+    out = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+    for i in range(N):
+        for j in range(N):
+            out[j][N-i-1] = img[i][j]
+    return out
+
+# Swap elements layer by layer in a clockwise fashion.
+# O(N^2) due to having to iterate through N^2 values
+# O(1) space, swap is done in place
+def rotateInPlace(img, N):
+    for layer in range(N//2):
+        first = layer
+        last = N - 1 - layer
+        for i in range(first, last):
+            offset = i - first
+            # Save top layer for later
+            top = img[first][i]
+            # Put left on top
+            img[first][i] = img[last-offset][first]
+            # Put Bottom on left
+            img[last-offset][first] = img[last][last-offset]
+            # Put right on bottom
+            img[last][last-offset] = img[i][last]
+            # Put top on right
+            img[i][last] = top
+img = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]
+result = [[13,9,5,1],[14,10,6,2],[15,11,7,3],[16,12,8,4]]  
+rotateInPlace(img,4)
+
+for i in range(4):
+    for j in range(4):
+        assert img[i][j] == result[i][j]
+
+########################
+# 1.8
+
+# Find values in the matrix where they are 0 and add them to a rows or cols list. Iterate through the list and zero those rows and cols.
+# O(N*M) time, N*M to iterate through matrix + at worst N*M rows and at worst N*M cols (if they are already all zeroes).
+# O(N+M) space, N potential rows, M potential cols.
+# Could use O(1) space if you use the first row and first col as the rows and cols. Just mark seperately if they themselves need to be zeroed.
+def zero(matrix):
+    if not matrix or not matrix[0]:
+        return False
+    N = len(matrix)
+    M = len(matrix[0])
+    rows = []
+    cols = []
+    for i in range(N):
+        for j in range(M):
+            if matrix[i][j] == 0:
+                rows.append(i)
+                cols.append(j)
+    for row in rows:
+        for j in range(M):
+            matrix[row][j] = 0
+    for col in cols:
+        for i in range(N):
+            matrix[i][col] = 0 
+
+img = [[1,2,0,4],[5,6,7,8],[9,10,11,0],[13,14,15,16]]
+zero(img)
+print(*img, sep='\n')
+
+######################
+# 1.9
+
+# Find a rotation point in s1 where the split strings are substrings in s2.
+# O(N^2) time since N iterations of N length slices.
+# O(N^2) space since slices of total length N must be created for each of the N iterations
+def rotation(s1: str, s2:str) -> bool:
+    if not s1 or not s2:
+        return False
+    if len(s1) != len(s2):
+        return False
+    for i in range(0, len(s1)):
+        if s1[0:i] in s2 and s1[i+1:] in s2:
+            return True
+    return False
+
+# Better way to do it is that s2 will always be a substring of s1 + s1
+# O(N) assuming substring is O(A+B) where A and B are string lengths.
+# O(N) space since a new string of length 2 & s1 is created/
+def rotation2(s1: str, s2: str) -> bool:
+    if not s1 or not s2:
+        return False
+    if len(s1) != len(s2):
+        return False
+    return s2 in s1 + s1
+    
+
+assert rotation("waterbottle", "erbottlewat")
+assert rotation("waterbottle", "rbottlewate")
+assert not rotation("waterbottle", "bottlewattr")
+assert not rotation("","")
+
+assert rotation2("waterbottle", "erbottlewat")
+assert rotation2("waterbottle", "rbottlewate")
+assert not rotation2("waterbottle", "bottlewattr")
+assert not rotation2("","")
