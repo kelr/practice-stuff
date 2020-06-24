@@ -24,10 +24,9 @@ def getHostname(url: str):
 from collections import deque
 # Speedup attempt, use deque, dont split the url, dont use filter, don't add the queue url to history
 # unless it has confirmed that its not in there.
-def crawl(startUrl, htmlParser):
-    queue = deque()
+def crawl(startUrl, htmlParser):queue = deque()
     queue.append(startUrl)
-    history = { url:True }
+    history = { startUrl:True }
     target = "http://" + startUrl.split("/")[2]
     while queue:
         url = queue.popleft()
@@ -37,3 +36,4 @@ def crawl(startUrl, htmlParser):
                 history[u] = True
                 
     return history.keys()
+    
