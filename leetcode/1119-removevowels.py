@@ -7,3 +7,7 @@ def removeVowels(S) -> str:
         if char not in ["a", "e", "i", "o", "u"]:
             out.append(char)
     return "".join(out)
+
+# One lineeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer
+def removeVowels(S) -> str:
+    return "".join([char for char in S if char not in "aeiou"])
