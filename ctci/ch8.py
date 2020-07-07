@@ -224,3 +224,129 @@ def magicIndexNonDistinct(start, end, nums):
 
 nums = [-10,-5,2,2,2,3,4,7,9,12,13]
 print(magicIndexNonDistinct(0, len(nums)-1, nums))
+
+
+#################### 
+# 8.4
+
+# Bottom up DP. Start with an empty set, and iterate over all nums.
+# Concat the num onto each set in the output list and append it to the list.
+# O(N*2^N) time, 2^N subsets are created and each of the N elements are in half of the subsets = N*2^N-1
+# O(N*2^N) space, 2^N subsets are created and each of the N elements are in half of the subsets = N*2^N-1
+def powerSet(nums):
+    out = [[]]
+
+    for num in nums:
+        tmp = []
+        for s in out:
+            tmp.append(s + [num])
+        out += tmp
+
+    return out
+
+input = [1,2,3,4,5]
+print(powerSet(input))
+
+# Bottup up DP with backtrack. Build every set of length 0 to len(nums).
+# O(N*2^N) time, 2^N subsets are created and each of the N elements are in half of the subsets = N*2^N-1
+# O(N*2^N) space, 2^N subsets are created and each of the N elements are in half of the subsets = N*2^N-1
+def powerSet2(nums):
+    out = []
+    for i in range(len(nums) + 1):
+        backtrack(0, i, [], out, nums)
+    return out
+
+# Builds all subsets of size, size from nums.
+def backtrack(start, size, curr, out, nums):
+    # Backtrack when we reach the desired size
+    if len(curr) == size:
+        out.append(curr[:])
+        return
+
+    for i in range(start, len(nums)):
+        curr.append(nums[i])
+        backtrack(i + 1, size, curr, out, nums)
+        curr.pop()
+
+
+input = [1,2,3]
+print(powerSet2(input))
+
+# Generate a binary representation for all numbers from 0 to 2^N exclusive.
+# O(N*2^N) time, 2^N masks are created, each mask translation to set is N.
+# O(N*2^N) space, 2^N subsets are created and each of the N elements are in half of the subsets = N*2^N-1
+def powerSet3(nums):
+    out = []
+    # Get 2^N
+    maxVal = 1 << len(nums)
+    for i in range(maxVal):
+        out.append(intToSet(i, nums))
+    return out
+
+# Iterate through each bit in the mask. If the bit is set, append that value of that index
+# in the original nums set to the subset.
+
+def intToSet(mask, nums):
+    subset = []
+    i = 0
+    while mask > 0:
+        if (mask & 1) == 1:
+            subset.append(nums[i])
+        i += 1
+        mask >>= 1
+    return subset
+
+input = [1,2,3,4,5]
+print(powerSet3(input))
+
+assert(len(powerSet2(input)) == len(powerSet(input)) == len(powerSet3(input)))
+
+#################### 
+# 8.5
+
+
+# x*y is just x added with itself y times. x and y are constrained to be positive
+# Base case is if y is 1.
+# If y is even, split y in half and recursively check both sides, add to memo.
+# If y is odd, subtract by one and recursively call. Will quickly turn into an even tree.
+# O(lgY) time, each split in the recursive tree splits in two Y times.
+# O(lgY) space, one memo per level in the recursive tree.
+memo = {}
+def mult(x, y):
+    if y == 1:
+        return x
+
+    if (x, y) in memo:
+        return memo[(x, y)]
+
+    # For even y, divide y by 2 and sum the results.
+    # For odd y, just subtract one.
+    if y % 2 == 0:
+        memo[(x, y)] = mult(x, y >> 1) + mult(x, y >> 1)
+    else:
+        memo[(x, y)] = x + mult(x, y-1)
+
+    return memo[(x, y)]
+print(mult(123123, 45645645645))
+
+# Optimized version of mult. Determine which of the inputs are smaller and 
+# find the product of half of it and the bigger number. No call is repeated twice
+# so theres no need for a memo. Add on one extra big if the initial small was odd.
+# O(lgS) time, where S is the smaller of x and y.
+# O(1) space.
+def mult2(x, y):
+    small = min(x, y)
+    big = max(x, y)
+
+    if small == 1:
+        return big
+
+    # Get the value of small/2 * big. Shifting will floor small if its odd.
+    half = mult(small >> 1, big)
+
+    if small % 2 == 0:
+        return half + half
+    else:
+        return half + half + big
+
+print(mult2(123123, 45645645645))
