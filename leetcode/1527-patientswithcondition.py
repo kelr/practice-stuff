@@ -1,0 +1,1 @@
+SELECT * FROM Patients WHERE position('DIAB1' in conditions) > 0;
