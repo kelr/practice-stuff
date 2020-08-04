@@ -84,3 +84,38 @@ def orangesRotting(grid) -> int:
                     rotQueue.append((i, j))
     
     return -1 if freshCount > 0 else minutes
+
+# Interesting solution of creating sets of all rotten and fresh oranges.
+# O((MN)^2), since the worst case is if every orange except 1 is rotten. 
+# The while loop checks every fresh orange until it finds neighbors that are rotten.
+# On average it performs better than BFS though.
+# O(MN) space.
+def orangesRotting(grid) -> int:
+    rottenSet = set()
+    freshSet = set()
+    for x in range(len(grid)):
+        for y in range(len(grid[0])):
+            if grid[x][y] == 1:
+                freshSet.add((x,y))
+            if grid[x][y] == 2:
+                rottenSet.add((x,y))
+    
+    minutes = 0
+    while len(freshSet) > 0:
+        newlyRotted = set()
+        for x, y in freshSet:
+            if (x+1, y) in rottenSet or (x-1, y) in rottenSet or (x, y+1) in rottenSet or (x, y-1) in rottenSet:
+                newlyRotted.add((x,y))
+                
+        if len(newlyRotted) == 0:
+            return -1
+        
+        # Remove newly rotted oranges from the fresh ones
+        freshSet.difference_update(newlyRotted)
+
+        # Add any newly rotted oranges to the rotten set
+        rottenSet.update(newlyRotted)
+
+        minutes += 1
+
+    return minutes
